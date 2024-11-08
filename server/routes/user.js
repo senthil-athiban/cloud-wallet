@@ -47,12 +47,12 @@ router.post("/signin", async (req, res) => {
     if(!checkPassword){
         return res.json({status: 401, message: "Invalid credentials"})
     }
-
+    
     const token = jwt.sign({
         userId: user.id
-    }, JWT_SECRET, { expiresIn: '1h'});
+    }, JWT_SECRET);
 
-    return res.json({status: 200, token});
+    return res.status(200).json({status: 200, token});
 });
 
 export const userRouter = router;

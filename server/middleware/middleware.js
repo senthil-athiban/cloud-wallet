@@ -1,5 +1,7 @@
+import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 
+dotenv.config();
 export const authMiddleware = (req, res, next) => {
     const token = req.header('Authorization');
 
@@ -13,6 +15,6 @@ export const authMiddleware = (req, res, next) => {
         next();    
     } catch (error) {
         console.log("Error in verifying the jwt token", error);
-        return res.json({status: 500, message: "Internal Server Error"})
+        return res.status(500).json({status: 500, message: "Internal Server Error"});
     }
 }
