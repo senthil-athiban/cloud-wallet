@@ -1,8 +1,11 @@
+import dotenv from "dotenv";
 import { Router } from "express";
 import User from "../models/user.js";
 import { Keypair } from "@solana/web3.js";
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
+
+dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const router = Router();
@@ -32,9 +35,9 @@ router.post("/signup", async (req, res) => {
 });
 
 router.post("/signin", async (req, res) => {
-    const { username, password} = req.query;
+    const { username, password} = req.body;
     const user = await User.findOne({username});
-
+    
     if(!user){
         return res.json({status: 404, message: "User not exists"})
     }
@@ -46,8 +49,10 @@ router.post("/signin", async (req, res) => {
     }
 
     const token = jwt.sign({
-        id: user.id
-    }, JWT_SECRET);
-})
+        userId: user.id
+    }, JWT_SECRET, { expiresIn: '1h'});
+
+    return res.json({status: 200, token});
+});
 
 export const userRouter = router;
